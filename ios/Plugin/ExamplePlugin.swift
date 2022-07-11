@@ -15,4 +15,12 @@ public class ExamplePlugin: CAPPlugin {
             "value": implementation.echo(value)
         ])
     }
+
+    @objc func logEvent(_ call: CAPPluginCall) {
+        let eventName = call.getString("eventName") ?? ""
+
+        call.resolve([
+            "result": eventName
+        ])
+    }
 }
