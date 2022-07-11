@@ -2,7 +2,7 @@ interface PluginResult {
   result: any;
 }
 
-export interface ExamplePlugin {
+export interface FacebookConnectPlugin {
   echo(options: { value: string }): Promise<{ value: string }>;
 
   // @see https://developers.facebook.com/docs/reference/ios/current/class/FBSDKAppEvents/#:~:text=logEvent%3Aparameters%3A,are%20described%20above.

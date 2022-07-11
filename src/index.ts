@@ -1,11 +1,11 @@
 import { registerPlugin } from '@capacitor/core';
 
-import type { ExamplePlugin } from './definitions';
+import type { FacebookConnectPlugin } from './definitions';
 
-const Example = registerPlugin<ExamplePlugin>('Example', {
+const FacebookConnect = registerPlugin<FacebookConnectPlugin>('FacebookConnect', {
   // @todo remove web implementation or add `this.unimplemented('Not implemented on web.');`
-  web: () => import('./web').then(m => new m.ExampleWeb()),
+  web: () => import('./web').then(m => new m.FacebookConnectWeb()),
 });
 
 export * from './definitions';
-export { Example };
+export { FacebookConnect };
