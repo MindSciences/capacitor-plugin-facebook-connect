@@ -10,6 +10,7 @@ def capacitor_pods
 end
 
 target 'Plugin' do
+  pod 'FBSDKCoreKit','14.1.0'
   capacitor_pods
 end
 
