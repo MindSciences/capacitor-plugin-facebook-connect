@@ -17,13 +17,6 @@ public class FacebookConnect: CAPPlugin {
 
       NotificationCenter.default.addObserver(
         self,
-        selector: #selector(self.orientationDidChange),
-        name: UIDevice.orientationDidChangeNotification,
-        object: nil
-      )
-
-      NotificationCenter.default.addObserver(
-        self,
         selector: #selector(self.applicationDidFinishLaunching(_:)),
         name: UIApplication.didFinishLaunchingNotification,
         object: nil
@@ -46,11 +39,11 @@ public class FacebookConnect: CAPPlugin {
         }
 
         ApplicationDelegate.shared.application(UIApplication.shared, didFinishLaunchingWithOptions: launchOptions)
-
         Profile.enableUpdatesOnAccessTokenChange(true)
     }
 
     @objc func applicationDidBecomeActive(_ notification: Notification) {
+
         if Settings.shared.isAutoLogAppEventsEnabled {
             AppEvents.shared.activateApp()
         }
@@ -58,10 +51,6 @@ public class FacebookConnect: CAPPlugin {
             self.applicationWasActivated = true
 //            self.enableHybridAppEvents() // @todo implement this
         }
-    }
-
-    @objc func orientationDidChange() {
-      print("orientation changed! yey!")
     }
 
     @objc func echo(_ call: CAPPluginCall) {
@@ -74,12 +63,41 @@ public class FacebookConnect: CAPPlugin {
     @objc func logEvent(_ call: CAPPluginCall) {
 //        Settings.shared.isAdvertiserTrackingEnabled = true;
 
+
         let eventName = call.getString("eventName") ?? ""
-        let parameters = call.getObject("parameters") // @todo pass paramenets to appevents
 
-        print("about to log event at facebook: " + eventName)
+        print("fbfbabout to log event at facebook: " + eventName)
 
-        AppEvents.shared.logEvent(AppEvents.Name(eventName))
+        let parameters: JSObject = call.getObject("parameters") ?? [:]
+        var newParameters: [AppEvents.ParameterName:String] = [:]
+
+        for (key, value) in parameters {
+            print("fbfbkey: \(key), value: \(value)")
+            let key2 = AppEvents.ParameterName(key)
+            print("fbfbkey6:", key2, type(of: key), type(of: key2), type(of: value), separator: " || ")
+            print("fbfbkey60:", AppEvents.ParameterName.currency, type(of: AppEvents.ParameterName.currency), separator: " || ")
+
+            if value as? String != nil {
+                print("fbfb inside")
+                newParameters[AppEvents.ParameterName(rawValue: key)] = value as? String
+            }
+        }
+
+        print("fbfbabout to log event at facebook: " + eventName)
+        print(Settings.shared.isAutoLogAppEventsEnabled)
+//
+//        var launchOptions = notification.userInfo as NSDictionary? as? [UIApplication.LaunchOptionsKey: Any];
+//
+//        if launchOptions == nil {
+//            launchOptions = [:]
+//        }
+
+        AppEvents.shared.logEvent(
+            AppEvents.Name(eventName), parameters: [
+                AppEvents.ParameterName.currency: "USD",
+                AppEvents.ParameterName.value: "USD",
+            ]
+        )
 
         call.resolve([
             "result": eventName
